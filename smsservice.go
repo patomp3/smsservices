@@ -18,7 +18,12 @@ type DBInfo struct {
 
 // New for create dbinfo
 func New(aAlias string) *DBInfo {
-	return GetDBInfo(aAlias)
+	return getDBInfo(aAlias)
+}
+
+// GetDBInfo for get username and password for dbalias
+func (dsn *DBInfo) GetDBInfo() *DBInfo {
+	return dsn
 }
 
 // ExecuteStoreProcedure to execute storeprocedure
@@ -115,8 +120,7 @@ func (dsn *DBInfo) ExecuteSQL(aSQL string) (int64, error) {
 	return myReturn, nil
 }
 
-// GetDBInfo to get database info from alias string
-func GetDBInfo(alias string) *DBInfo {
+func getDBInfo(alias string) *DBInfo {
 	var myReturn *DBInfo
 
 	myReturn, err := getUsernameAndPwd(alias)
