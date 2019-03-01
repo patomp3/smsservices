@@ -14,7 +14,6 @@ type DBInfo struct {
 	User     string
 	Password string
 	DsnURL   string
-	connStr  string
 }
 
 // New for create dbinfo
@@ -23,9 +22,9 @@ func New(aAlias string) *DBInfo {
 }
 
 // GetUsernameAndPwd for get username and password for dbalias
-func (dsn *DBInfo) GetUsernameAndPwd() (string, string, string) {
+/*func (dsn *DBInfo) GetUsernameAndPwd() (string, string, string) {
 	return "", dsn.User, dsn.Password
-}
+}*/
 
 // GetDBInfo for ..
 func (dsn *DBInfo) GetDBInfo() *DBInfo {
@@ -41,7 +40,7 @@ func (dsn *DBInfo) ExecuteStoreProcedure(aSQL string, args ...interface{}) bool 
 
 	//dsn := GetDBInfo(aAlias)
 	if dsn != nil {
-		var connStr = dsn.connStr
+		var connStr = dsn.User + "/" + dsn.Password + "@" + dsn.DsnURL
 		db, err := sql.Open("goracle", connStr)
 		defer db.Close()
 		if err != nil {
@@ -67,7 +66,7 @@ func (dsn *DBInfo) SelectSQL(aSQL string) (*sql.Rows, error) {
 	var myReturn *sql.Rows
 
 	if dsn != nil {
-		var connStr = dsn.connStr
+		var connStr = dsn.User + "/" + dsn.Password + "@" + dsn.DsnURL
 
 		db, err := sql.Open("goracle", connStr)
 		if err != nil {
@@ -95,7 +94,7 @@ func (dsn *DBInfo) ExecuteSQL(aSQL string) (int64, error) {
 	var myReturn int64
 
 	if dsn != nil {
-		var connStr = dsn.connStr
+		var connStr = dsn.User + "/" + dsn.Password + "@" + dsn.DsnURL
 
 		db, err := sql.Open("goracle", connStr)
 		if err != nil {
@@ -182,7 +181,6 @@ func getUsernameAndPwd(alias string) (*DBInfo, error) {
 	myReturn.User = decodeString(username, baseid)
 	myReturn.Password = decodeString(password, baseid)
 	myReturn.DsnURL = datasource
-	myReturn.connStr = myReturn.User + "/" + myReturn.Password + "@" + myReturn.DsnURL
 
 	return &myReturn, nil
 }
