@@ -6,25 +6,20 @@ import (
 	"log"
 	"strconv"
 
-	_ "gopkg.in/goracle.v2"
+	_ "gopkg.in/goracle.v2" //
 )
 
 //DBInfo for ..
 type DBInfo struct {
-	User     string
-	Password string
-	DsnURL   string
+	User     string `json:"user"`
+	Password string `json:"password"`
+	DsnURL   string `json:"dsnurl"`
 }
 
 // New for create dbinfo
 func New(aAlias string) *DBInfo {
 	return getDBInfo(aAlias)
 }
-
-// GetUsernameAndPwd for get username and password for dbalias
-/*func (dsn *DBInfo) GetUsernameAndPwd() (string, string, string) {
-	return "", dsn.User, dsn.Password
-}*/
 
 // GetDBInfo for ..
 func (dsn *DBInfo) GetDBInfo() *DBInfo {
