@@ -11,9 +11,10 @@ import (
 
 //DBInfo for ..
 type DBInfo struct {
-	user     string
-	password string
-	dsnURL   string
+	User     string
+	Password string
+	DsnURL   string
+	connStr  string
 }
 
 // New for create dbinfo
@@ -23,7 +24,7 @@ func New(aAlias string) *DBInfo {
 
 // GetUsernameAndPwd for get username and password for dbalias
 func (dsn *DBInfo) GetUsernameAndPwd() (string, string, string) {
-	return "", dsn.user, dsn.password
+	return "", dsn.User, dsn.Password
 }
 
 // GetDBInfo for ..
@@ -40,7 +41,7 @@ func (dsn *DBInfo) ExecuteStoreProcedure(aSQL string, args ...interface{}) bool 
 
 	//dsn := GetDBInfo(aAlias)
 	if dsn != nil {
-		var connStr = dsn.user + "/" + dsn.password + "@" + dsn.dsnURL
+		var connStr = dsn.connStr
 		db, err := sql.Open("goracle", connStr)
 		defer db.Close()
 		if err != nil {
@@ -65,9 +66,8 @@ func (dsn *DBInfo) ExecuteStoreProcedure(aSQL string, args ...interface{}) bool 
 func (dsn *DBInfo) SelectSQL(aSQL string) (*sql.Rows, error) {
 	var myReturn *sql.Rows
 
-	//dsn := GetDBInfo(aAlias)
 	if dsn != nil {
-		var connStr = dsn.user + "/" + dsn.password + "@" + dsn.dsnURL
+		var connStr = dsn.connStr
 
 		db, err := sql.Open("goracle", connStr)
 		if err != nil {
@@ -94,9 +94,8 @@ func (dsn *DBInfo) SelectSQL(aSQL string) (*sql.Rows, error) {
 func (dsn *DBInfo) ExecuteSQL(aSQL string) (int64, error) {
 	var myReturn int64
 
-	//dsn := GetDBInfo(aAlias)
 	if dsn != nil {
-		var connStr = dsn.user + "/" + dsn.password + "@" + dsn.dsnURL
+		var connStr = dsn.connStr
 
 		db, err := sql.Open("goracle", connStr)
 		if err != nil {
@@ -180,9 +179,10 @@ func getUsernameAndPwd(alias string) (*DBInfo, error) {
 		rows.Scan(&baseid, &datasource, &username, &password, &database)
 	}
 
-	myReturn.user = decodeString(username, baseid)
-	myReturn.password = decodeString(password, baseid)
-	myReturn.dsnURL = datasource
+	myReturn.User = decodeString(username, baseid)
+	myReturn.Password = decodeString(password, baseid)
+	myReturn.DsnURL = datasource
+	myReturn.connStr = myReturn.User + "/" + myReturn.Password + "@" + myReturn.DsnURL
 
 	return &myReturn, nil
 }
