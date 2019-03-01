@@ -22,8 +22,13 @@ func New(aAlias string) *DBInfo {
 }
 
 // GetUsernameAndPwd for get username and password for dbalias
-func (dsn *DBInfo) GetUsernameAndPwd() (string, string) {
-	return dsn.user, dsn.password
+func (dsn *DBInfo) GetUsernameAndPwd() (string, string, string) {
+	return "", dsn.user, dsn.password
+}
+
+// GetDBInfo for ..
+func (dsn *DBInfo) GetDBInfo() *DBInfo {
+	return dsn
 }
 
 // ExecuteStoreProcedure to execute storeprocedure
