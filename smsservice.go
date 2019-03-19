@@ -136,7 +136,7 @@ func getUsernameAndPwd(alias string) (*DBInfo, error) {
 
 	var dbusername = "devl"
 	var dbuserpass = "developer"
-	var dbname = "TV-PED-DP.TVSIT.CO.TH:1521/PED"
+	var dbname = "172.22.204.25:1521/PED"
 	var connStr = dbusername + "/" + dbuserpass + "@" + dbname
 
 	db, err := sql.Open("goracle", connStr)
