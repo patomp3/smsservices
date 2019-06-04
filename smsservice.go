@@ -21,6 +21,10 @@ func New(aAlias string) *DBInfo {
 	return getDBInfo(aAlias)
 }
 
+func (dsn *DBInfo) Close() {
+	dsn = nil
+}
+
 // GetDBInfo for ..
 func (dsn *DBInfo) GetDBInfo() *DBInfo {
 	return dsn
@@ -64,15 +68,15 @@ func (dsn *DBInfo) SelectSQL(aSQL string) (*sql.Rows, error) {
 		var connStr = dsn.User + "/" + dsn.Password + "@" + dsn.DsnURL
 
 		db, err := sql.Open("goracle", connStr)
+		defer db.Close()
 		if err != nil {
 			//log.Fatal(err)
 			return nil, err
 		}
-		defer db.Close()
-
 		//log.Println(aSQL)
 
 		rows, err := db.Query(aSQL)
+		//defer rows.Close()
 		if err != nil {
 			//fmt.Println("Error running query")
 			//fmt.Println(err)
@@ -92,11 +96,11 @@ func (dsn *DBInfo) ExecuteSQL(aSQL string) (int64, error) {
 		var connStr = dsn.User + "/" + dsn.Password + "@" + dsn.DsnURL
 
 		db, err := sql.Open("goracle", connStr)
+		defer db.Close()
 		if err != nil {
 			log.Fatal(err)
 			return 0, err
 		}
-		defer db.Close()
 
 		//log.Println(aSQL)
 		rows, err := db.Exec(aSQL)
@@ -140,11 +144,11 @@ func getUsernameAndPwd(alias string) (*DBInfo, error) {
 	var connStr = dbusername + "/" + dbuserpass + "@" + dbname
 
 	db, err := sql.Open("goracle", connStr)
+	defer db.Close()
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
-	defer db.Close()
 
 	aSQL = " SELECT A.BASEID, NVL(C.DATASOURCE, ' '), A.USERNAME, A.PASSWORD, A.DATABASE" +
 		" FROM SMS_DATABASE A, SMS_DATABASE_CONFIG B, SMS_DATABASE_DATASOURCEURL C" +
@@ -156,12 +160,12 @@ func getUsernameAndPwd(alias string) (*DBInfo, error) {
 	//log.Println(aSQL)
 
 	rows, err := db.Query(aSQL)
+	defer rows.Close()
 	if err != nil {
 		fmt.Println("Error running query")
 		fmt.Println(err)
 		return nil, err
 	}
-	defer rows.Close()
 
 	var baseid int
 	var datasource string
