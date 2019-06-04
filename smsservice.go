@@ -21,6 +21,7 @@ func New(aAlias string) *DBInfo {
 	return getDBInfo(aAlias)
 }
 
+// Close dbinfo
 func (dsn *DBInfo) Close() {
 	dsn = nil
 }
